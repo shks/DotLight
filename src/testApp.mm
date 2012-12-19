@@ -150,13 +150,16 @@ void testApp::touchDown(ofTouchEventArgs & touch){
 
 //--------------------------------------------------------------
 void testApp::touchMoved(ofTouchEventArgs & touch){
-    mTouchPos.x = touch.x * 1;
-    mTouchPos.y = touch.y * 1 -ofGetHeight() * 1.0;
-
-    mHuePos += (mTouchPos.y - mTouchPosEx.y) * -0.001;
     
-    mTouchPosEx = mTouchPos;
-    
+    if(touch.numTouches == 1)
+    {
+        mTouchPos.x = touch.x * 1;
+        mTouchPos.y = touch.y * 1 -ofGetHeight() * 1.0;
+        
+        mHuePos += (mTouchPos.y - mTouchPosEx.y) * -0.001;
+        
+        mTouchPosEx = mTouchPos;
+    }
 }
 
 //--------------------------------------------------------------
@@ -184,7 +187,7 @@ void testApp::touchCancelled(ofTouchEventArgs & touch){
 void testApp :: touchTwoFinger ( ofkMultiTouchEventArgs &multiTouch )
 {
     
-    if(abs(multiTouch.angleDif) > 1.0)
+    if(abs(multiTouch.angleDif) > 2.0)
     {
         //ROTATE
         
