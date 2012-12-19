@@ -32,11 +32,11 @@ void testApp::setup(){
     myVbo.setColorData(myColor, NUM_PARTICLES, GL_DYNAMIC_DRAW);
     
     mPointIntervalRate = 1.0;
-    mPointSize = 2.0;
+    mPointSize = 8.0;
     mIsSmoothPoint = true;
     mHuePos = 0.0;
-    mHueScale = 2.0;
-    mPointBrightNess = 0.7;
+    mHueScale = 6.0;
+    mPointBrightNess = 0.9;
     
     mIsSpace = true;
 
@@ -109,7 +109,7 @@ void testApp::draw(){
         glDisable(GL_POINT_SMOOTH);
     }
     
-    glPointSize(mPointSize);
+    glPointSize(mPointSize * mPointIntervalRate);
     
     ofEnableBlendMode(OF_BLENDMODE_ADD);
  
@@ -181,11 +181,20 @@ void testApp :: touchTwoFinger ( ofkMultiTouchEventArgs &multiTouch )
 {
     cout << multiTouch.pinchLengthDif << "\n";
     
+    /*
     mHueScale += multiTouch.pinchLengthDif * 0.01;
 
     if(mHueScale < 0.5)
     {
         mHueScale = 0.5;
+    }*/
+    
+    
+    mPointIntervalRate += multiTouch.pinchLengthDif * 0.01;
+    
+    if(mPointIntervalRate <1.0)
+    {
+        mPointIntervalRate = 1.0;
     }
 }
 

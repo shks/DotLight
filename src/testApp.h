@@ -12,7 +12,7 @@
 
 
 
-#define SANDRES (5)
+#define SANDRES (10)
 
 class testApp : public ofxiPhoneApp{
 	
@@ -39,7 +39,7 @@ class testApp : public ofxiPhoneApp{
     // -------------------------- //
 
     //static const int NUM_PARTICLES = 960 * 640 ;
-    static const int NUM_PARTICLES = 960 / SANDRES * 640 / SANDRES ;
+    static const int NUM_PARTICLES = 960 / SANDRES * 640 / SANDRES;
     
     
     ofEasyCam cam; // camera
@@ -53,7 +53,7 @@ class testApp : public ofxiPhoneApp{
     
     ofPoint mTouchDownPos;
     
-    
+
     float mHuePos;
     float mHueScale;
     
