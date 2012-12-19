@@ -61,7 +61,7 @@ class testApp : public ofxiPhoneApp{
     float mPointIntervalRate;
     float mPointBrightNess;
     bool mIsSmoothPoint;
-    
+    bool mIsSpace;
     
     ///
     //Main

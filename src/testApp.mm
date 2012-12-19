@@ -14,8 +14,8 @@ void testApp::setup(){
     
     initGUILayout();
 
-    int WIDTH = ofGetWidth() * 2 / SANDRES;
-    int HEIGHT = ofGetHeight() * 2 / SANDRES;
+    int WIDTH = ofGetWidth() / SANDRES;
+    int HEIGHT = ofGetHeight() / SANDRES;
     for (int i = 0; i < WIDTH; i++) {
         for (int j = 0; j < HEIGHT; j++) {
             myVerts[j * WIDTH + i].set(i * SANDRES, (j - HEIGHT/2) * SANDRES, 0);
@@ -37,36 +37,30 @@ void testApp::setup(){
     mHuePos = 0.0;
     mHueScale = 2.0;
     mPointBrightNess = 0.7;
+    
+    mIsSpace = true;
 
     //multiTouch Enable
     multiTouchEvent.enable();
-    ofAddListener(multiTouchEvent.touchTwoFingerEvent, this, &testApp::touchTwoFinger) ;
-
+    ofAddListener(multiTouchEvent.touchTwoFingerEvent, this, &testApp::touchTwoFinger);
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
     
-    int WIDTH = ofGetWidth() * 2 / SANDRES;
-    int HEIGHT = ofGetHeight() * 2 / SANDRES;
+    int WIDTH = ofGetWidth() / SANDRES;
+    int HEIGHT = ofGetHeight() / SANDRES;
     
     for (int i = 0; i < WIDTH; i++) {
         for (int j = 0; j < HEIGHT; j++) {
             int index = j * WIDTH + i;
-            /*
-            
-            myVerts[i].z = pow( (mTouchPos.x - myVerts[i].x), 2 )
-            + pow( (mTouchPos.y - myVerts[i].y), 2 );
-            myVerts[i].z = 100 / (1 + sqrt(myVerts[i].z ));
-            */
-            
+
             //mPointIntervalRate
             myVerts[index].set(i * SANDRES * mPointIntervalRate,
-                                       (j - HEIGHT/2) * SANDRES * mPointIntervalRate, 0);
+                                       (j) * SANDRES * mPointIntervalRate, 0);
             
             /// ----------- COLOR ------------- //
             
-
             float sat = 0.5;//
             float bri = 1.0;//
             //0.8 + 1.0 / ( 1.0 + 0.05 * (float)sqrt( pow( (mTouchPos.x - myVerts[index].x), 2 )
@@ -83,7 +77,14 @@ void testApp::update(){
             HUE = HUE % 255;
             col.setHsb(HUE , 255.0 * sat, 255.0 * bri);
             
-            float a = ((j + i) % 2 == 0) ? mPointBrightNess : 0.0;
+            float a;
+            if(mIsSpace)
+            {
+                a = ((j + i) % 2 == 0) ? mPointBrightNess : 0.0;
+            }else
+            {
+                a = mPointBrightNess;                
+            }
             
             myColor[j * WIDTH + i].set(col.r / 255.5, col.g / 255.5, col.b / 255.5, a);
         }
@@ -120,14 +121,11 @@ void testApp::draw(){
     
     ofPopMatrix();
     
-    
     ofSetColor(255, 255, 255);
-    ofDrawBitmapString("dot light version 000 : " + ofToString( ofGetFrameRate() ), 0.0, 10.0);
-    ofDrawBitmapString("Time : " + ofToString( ofGetElapsedTimeMillis() ), 0.0, 30.0);
     
     ofSetupScreen();
     
-    ofTranslate(0, - ofGetHeight());
+    //ofTranslate(0, - ofGetHeight());
     
 }
 
@@ -215,11 +213,11 @@ void testApp::deviceOrientationChanged(int newOrientation){
 void testApp::initGUILayout()
 {
     int xInit = OFX_UI_GLOBAL_WIDGET_SPACING;
-    int FONT_LARGE = (int) 30 * DISP_RATIO;
-    int FONT_MID= (int) 25 * DISP_RATIO;
-    int FONT_SMALL= (int) 20 * DISP_RATIO;
+    int FONT_LARGE = (int) 20 * DISP_RATIO;
+    int FONT_MID= (int) 15 * DISP_RATIO;
+    int FONT_SMALL= (int) 10 * DISP_RATIO;
     int dim =  70;
-    float length = ofGetWidth() - xInit;
+    float length = ofGetWidth() / 2 - xInit;
     
     //-guiHeader-----------------------------------------------------------//
     
@@ -236,6 +234,7 @@ void testApp::initGUILayout()
     guiCanvas->setFontSize(OFX_UI_FONT_SMALL , FONT_SMALL);
     
     {
+        guiCanvas->addFPSSlider("FPS", length-xInit, 50);
         guiCanvas->addWidgetDown(new ofxUILabel("Dot Light Debug", OFX_UI_FONT_LARGE));
         guiCanvas->addWidgetDown(new ofxUILabel("Double Tap to Swicth Debug", OFX_UI_FONT_LARGE));
         //guiCanvas->addWidgetDown(new ofxUIFPSSlider("FPS", ofGetWidth() - 2 * xInit, 50,15));
@@ -246,8 +245,8 @@ void testApp::initGUILayout()
         guiCanvas->addSlider("POINT_BrightNess", 0.1, 1.0, &mPointBrightNess, length-xInit, 60);
         
         guiCanvas->addToggle("POINT_SMOOTH", &mIsSmoothPoint, dim, 60);
-
-        //guiCanvas
+        guiCanvas->addToggle("POINT_SPARSE", &mIsSpace, dim, 60);
+        
         
         guiCanvas->addWidgetDown(new ofxUISpacer(length-xInit, 1));
 
