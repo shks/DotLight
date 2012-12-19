@@ -14,8 +14,8 @@ void testApp::setup(){
     
     initGUILayout();
 
-    int WIDTH = ofGetWidth() / SANDRES;
-    int HEIGHT = ofGetHeight() / SANDRES;
+    int WIDTH = DOT_HORIZONAL_NUM;
+    int HEIGHT = DOT_VERTICAL_NUM;
     for (int i = 0; i < WIDTH; i++) {
         for (int j = 0; j < HEIGHT; j++) {
             myVerts[j * WIDTH + i].set(i * SANDRES, (j - HEIGHT/2) * SANDRES, 0);
@@ -28,11 +28,12 @@ void testApp::setup(){
         }
     }
     
+    int NUM_PARTICLES = DOT_HORIZONAL_NUM * DOT_VERTICAL_NUM;
     myVbo.setVertexData(myVerts, NUM_PARTICLES, GL_DYNAMIC_DRAW);
     myVbo.setColorData(myColor, NUM_PARTICLES, GL_DYNAMIC_DRAW);
     
     mPointIntervalRate = 1.0;
-    mPointSize = 8.0;
+    mPointSize = 4.0;
     mIsSmoothPoint = true;
     mHuePos = 0.0;
     mHueScale = 6.0;
@@ -48,16 +49,26 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update(){
     
-    int WIDTH = ofGetWidth() / SANDRES;
-    int HEIGHT = ofGetHeight() / SANDRES;
+    int WIDTH = DOT_HORIZONAL_NUM;
+    int HEIGHT = DOT_VERTICAL_NUM;
     
     for (int i = 0; i < WIDTH; i++) {
         for (int j = 0; j < HEIGHT; j++) {
             int index = j * WIDTH + i;
 
-            //mPointIntervalRate
-            myVerts[index].set(i * SANDRES * mPointIntervalRate,
-                                       (j) * SANDRES * mPointIntervalRate, 0);
+            if(j % 2 == 0)
+            {
+                //even
+                myVerts[index].set(2 * i * SANDRES * mPointIntervalRate,
+                                   (1 * j) * SANDRES * mPointIntervalRate, 0);
+                
+            }else
+            {
+                //odd
+                myVerts[index].set( (2 * i + 1) * SANDRES * mPointIntervalRate,
+                                   (1 * j) * SANDRES * mPointIntervalRate, 0);
+                
+            }
             
             /// ----------- COLOR ------------- //
             
@@ -77,19 +88,12 @@ void testApp::update(){
             HUE = HUE % 255;
             col.setHsb(HUE , 255.0 * sat, 255.0 * bri);
             
-            float a;
-            if(mIsSpace)
-            {
-                a = ((j + i) % 2 == 0) ? mPointBrightNess : 0.0;
-            }else
-            {
-                a = mPointBrightNess;                
-            }
+            float a = mPointBrightNess;
             
             myColor[j * WIDTH + i].set(col.r / 255.5, col.g / 255.5, col.b / 255.5, a);
         }
     }
-    
+    int NUM_PARTICLES = DOT_HORIZONAL_NUM * DOT_VERTICAL_NUM;
     myVbo.updateVertexData(myVerts, NUM_PARTICLES);
     myVbo.updateColorData(myColor, NUM_PARTICLES);///(/myVerts, NUM_PARTICLES);
 
@@ -117,7 +121,7 @@ void testApp::draw(){
 //    glPointParameterfv(GL_POINT_DISTANCE_ATTENUATION, distance);
 //    glPointSize(5000);
     
-    myVbo.draw(GL_POINTS, 0, NUM_PARTICLES);
+    myVbo.draw(GL_POINTS, 0, DOT_HORIZONAL_NUM * DOT_VERTICAL_NUM);
     
     ofPopMatrix();
     
@@ -179,23 +183,34 @@ void testApp::touchCancelled(ofTouchEventArgs & touch){
 
 void testApp :: touchTwoFinger ( ofkMultiTouchEventArgs &multiTouch )
 {
-    cout << multiTouch.pinchLengthDif << "\n";
     
-    /*
-    mHueScale += multiTouch.pinchLengthDif * 0.01;
-
-    if(mHueScale < 0.5)
+    if(abs(multiTouch.angleDif) > 1.0)
     {
-        mHueScale = 0.5;
-    }*/
-    
-    
-    mPointIntervalRate += multiTouch.pinchLengthDif * 0.01;
-    
-    if(mPointIntervalRate <1.0)
-    {
-        mPointIntervalRate = 1.0;
+        //ROTATE
+        
+        
+        mPointSize += multiTouch.angleDif * -0.1;
+        
+        if(mPointSize < 0.5)
+        {
+            mPointSize = 0.5;
+        }
+        
+        if(mPointSize > 8.0)
+        {
+            mPointSize = 8.0;
+        }
+        
+    }else{
+        //PINCH
+        mPointIntervalRate += multiTouch.pinchLengthDif * 0.01;
+        
+        if(mPointIntervalRate <1.0)
+        {
+            mPointIntervalRate = 1.0;
+        }
     }
+
 }
 
 //--------------------------------------------------------------
@@ -328,16 +343,6 @@ void testApp::guiEvent(ofxUIEventArgs &e)
             mUDPjpegStream.setjpegQuality(OF_IMAGE_QUALITY_WORST);
         }
     }
-     */
-    
-    /*
-     
-     names.push_back("BEST");
-     names.push_back("HIGH");
-     names.push_back("MEDIUM");
-     names.push_back("LOW");
-     names.push_back("WORST");
-     
      */
 }
 

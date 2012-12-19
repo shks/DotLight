@@ -10,9 +10,8 @@
 //Addons
 #include "ofxUI.h"
 
-
-
-#define SANDRES (10)
+#define SANDRES (6)
+#define POINT_MAXSIZE (8.00)
 
 class testApp : public ofxiPhoneApp{
 	
@@ -38,14 +37,17 @@ class testApp : public ofxiPhoneApp{
     
     // -------------------------- //
 
+    static const int DOT_HORIZONAL_NUM = 640 / SANDRES / 2;
+    static const int DOT_VERTICAL_NUM = 960 / SANDRES;
+    
     //static const int NUM_PARTICLES = 960 * 640 ;
-    static const int NUM_PARTICLES = 960 / SANDRES * 640 / SANDRES;
+    //static const int NUM_PARTICLES = 960 / SANDRES * 640 / SANDRES / 2;
     
     
     ofEasyCam cam; // camera
     ofVbo myVbo; // VBO
-    ofVec3f myVerts[NUM_PARTICLES];
-    ofFloatColor myColor[NUM_PARTICLES];
+    ofVec3f myVerts[DOT_HORIZONAL_NUM * DOT_VERTICAL_NUM];
+    ofFloatColor myColor[DOT_HORIZONAL_NUM * DOT_VERTICAL_NUM];
     
     bool isTouched;
     ofPoint mTouchPos;
