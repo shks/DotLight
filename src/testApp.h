@@ -38,11 +38,7 @@ class testApp : public ofxiPhoneApp{
     // -------------------------- //
 
     static const int DOT_HORIZONAL_NUM = 640 / SANDRES / 2;
-    static const int DOT_VERTICAL_NUM = 960 / SANDRES;
-    
-    //static const int NUM_PARTICLES = 960 * 640 ;
-    //static const int NUM_PARTICLES = 960 / SANDRES * 640 / SANDRES / 2;
-    
+    static const int DOT_VERTICAL_NUM = 1136 / SANDRES;
     
     ofEasyCam cam; // camera
     ofVbo myVbo; // VBO
@@ -52,7 +48,6 @@ class testApp : public ofxiPhoneApp{
     bool isTouched;
     ofPoint mTouchPos;
     ofPoint mTouchPosEx;
-    
     ofPoint mTouchDownPos;
     
 

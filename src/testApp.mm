@@ -59,15 +59,16 @@ void testApp::update(){
             if(j % 2 == 0)
             {
                 //even
-                myVerts[index].set(2 * i * SANDRES * mPointIntervalRate,
-                                   (1 * j) * SANDRES * mPointIntervalRate, 0);
-                
+                myVerts[index].x = 2 * i * SANDRES * mPointIntervalRate;
+                myVerts[index].y = (1 * j) * SANDRES * mPointIntervalRate;
+                myVerts[index].z += (0 - myVerts[index].z) * 0.1;
+
             }else
             {
                 //odd
-                myVerts[index].set( (2 * i + 1) * SANDRES * mPointIntervalRate,
-                                   (1 * j) * SANDRES * mPointIntervalRate, 0);
-                
+                myVerts[index].x = (2 * i + 1) * SANDRES * mPointIntervalRate;
+                myVerts[index].y = (1 * j) * SANDRES * mPointIntervalRate;
+                myVerts[index].z += (0 - myVerts[index].z) * 0.1;
             }
             
             /// ----------- COLOR ------------- //
@@ -91,6 +92,18 @@ void testApp::update(){
             float a = mPointBrightNess;
             
             myColor[j * WIDTH + i].set(col.r / 255.5, col.g / 255.5, col.b / 255.5, a);
+            
+            // touch なにかする？
+            if(isTouched)
+            {
+                if( abs (myVerts[index].x - mTouchPos.x) <  50.0 )
+                {
+                    if( abs (myVerts[index].y - mTouchPos.y) <  50.0 )
+                    {
+                        myVerts[index].z = 100.0;
+                    }
+                }
+            }
         }
     }
     int NUM_PARTICLES = DOT_HORIZONAL_NUM * DOT_VERTICAL_NUM;
@@ -102,6 +115,8 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 	//rendering here something..
+    
+    ofCircle(mTouchPos.x, mTouchPos.y, 10);
     
     ofPushMatrix();
     
@@ -117,9 +132,9 @@ void testApp::draw(){
     
     ofEnableBlendMode(OF_BLENDMODE_ADD);
  
-//    static GLfloat distance[] = { 0.0, 0.0, 1.0 };
-//    glPointParameterfv(GL_POINT_DISTANCE_ATTENUATION, distance);
-//    glPointSize(5000);
+    static GLfloat distance[] = { 0.0, 0.0, 0.0001 };
+    glPointParameterfv(GL_POINT_DISTANCE_ATTENUATION, distance);
+    glPointSize(20 * mPointSize * mPointIntervalRate);
     
     myVbo.draw(GL_POINTS, 0, DOT_HORIZONAL_NUM * DOT_VERTICAL_NUM);
     
@@ -128,8 +143,6 @@ void testApp::draw(){
     ofSetColor(255, 255, 255);
     
     ofSetupScreen();
-    
-    //ofTranslate(0, - ofGetHeight());
     
 }
 
@@ -143,7 +156,10 @@ void testApp::touchDown(ofTouchEventArgs & touch){
     isTouched = true;
 
     mTouchPos.x = touch.x * 1;
-    mTouchPos.y = touch.y * 1 -ofGetHeight() * 1.0;
+    mTouchPos.y = touch.y * 1;// -ofGetHeight() * 1.0;
+    
+    cout << mTouchPos.x << "," << mTouchPos.y << endl;
+    
     
     mTouchPosEx = mTouchDownPos = mTouchPos;
 }
@@ -154,7 +170,7 @@ void testApp::touchMoved(ofTouchEventArgs & touch){
     if(touch.numTouches == 1)
     {
         mTouchPos.x = touch.x * 1;
-        mTouchPos.y = touch.y * 1 -ofGetHeight() * 1.0;
+        mTouchPos.y = touch.y * 1;// -ofGetHeight() * 1.0;
         
         mHuePos += (mTouchPos.y - mTouchPosEx.y) * -0.001;
         
@@ -166,7 +182,7 @@ void testApp::touchMoved(ofTouchEventArgs & touch){
 void testApp::touchUp(ofTouchEventArgs & touch){
     isTouched = false;
     mTouchPos.x = touch.x * 1;
-    mTouchPos.y = touch.y * 1 -ofGetHeight() * 1.0;
+    mTouchPos.y = touch.y * 1;// -ofGetHeight() * 1.0;
 
 }
 
@@ -186,11 +202,9 @@ void testApp::touchCancelled(ofTouchEventArgs & touch){
 
 void testApp :: touchTwoFinger ( ofkMultiTouchEventArgs &multiTouch )
 {
-    
     if(abs(multiTouch.angleDif) > 2.0)
     {
         //ROTATE
-        
         
         mPointSize += multiTouch.angleDif * -0.1;
         
