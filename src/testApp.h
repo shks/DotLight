@@ -44,6 +44,8 @@ class testApp : public ofxiPhoneApp{
     ofVbo myVbo; // VBO
     ofVec3f myVerts[DOT_HORIZONAL_NUM * DOT_VERTICAL_NUM];
     ofFloatColor myColor[DOT_HORIZONAL_NUM * DOT_VERTICAL_NUM];
+    float myVectors[DOT_HORIZONAL_NUM * DOT_VERTICAL_NUM];
+    float myForces[DOT_HORIZONAL_NUM * DOT_VERTICAL_NUM];
     
     bool isTouched;
     ofPoint mTouchPos;

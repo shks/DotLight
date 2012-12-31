@@ -36,7 +36,7 @@ void testApp::setup(){
     myVbo.setColorData(myColor, NUM_PARTICLES, GL_DYNAMIC_DRAW);
     
     mPointIntervalRate = 1.0;
-    mPointSize = 2.0;
+    mPointSize = 4.0;
     mIsSmoothPoint = true;
     mHuePos = 0.0;
     mHueScale = 6.0;
@@ -52,8 +52,8 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update(){
     
-    const static float springK = 1.05;
-    const static float DumperK = -0.1;
+    const static float springK = 1.7;
+    const static float DumperK = -0.2;
     
     
     int WIDTH = DOT_HORIZONAL_NUM;
@@ -106,14 +106,32 @@ void testApp::update(){
             // touch なにかする？
             if(isTouched)
             {
-                 float targetZ = ((myVerts[index].x - mTouchPos.x) * (myVerts[index].x - mTouchPos.x)
+                /*
+                if( abs (myVerts[index].x - mTouchPos.x) <  200.0 )
+                {
+                    if( abs (myVerts[index].y - mTouchPos.y) <  200.0 )
+                    {
+                        float targetZ = 200 - sqrt(
+                                             (myVerts[index].x - mTouchPos.x) * (myVerts[index].x - mTouchPos.x)
+                                             +
+                                             (myVerts[index].y - mTouchPos.y) * (myVerts[index].y - mTouchPos.y)
+                                             );
+                        
+                        myVerts[index].z = (2 * targetZ > 0)? 2 * targetZ  : 0;
+                    }
+                }*/
+                
+                float targetZ = sqrt(
+                                           (myVerts[index].x - mTouchPos.x) * (myVerts[index].x - mTouchPos.x)
                                            +
                                            (myVerts[index].y - mTouchPos.y) * (myVerts[index].y - mTouchPos.y)
                                            );
-//                /targetZ = 2000.0 / (1.0 + 0.3 * targetZ );
-                targetZ = 500*exp(-0.00005 * targetZ);
+                targetZ = 20000.0 / (1.0 + targetZ );
                 
-                myVerts[index].z += ( targetZ - myVerts[index].z) * 0.5;
+                
+                myVerts[index].z += ( targetZ - myVerts[index].z) * 0.8;
+
+                
             }
         }
     }
@@ -126,6 +144,8 @@ void testApp::update(){
 //--------------------------------------------------------------
 void testApp::draw(){
 	//rendering here something..
+    
+    ofCircle(mTouchPos.x, mTouchPos.y, 10);
     
     ofPushMatrix();
     
@@ -222,9 +242,9 @@ void testApp :: touchTwoFinger ( ofkMultiTouchEventArgs &multiTouch )
             mPointSize = 0.5;
         }
         
-        if(mPointSize > 3.3)
+        if(mPointSize > 8.0)
         {
-            mPointSize = 3.3;
+            mPointSize = 8.0;
         }
         
     }else{
