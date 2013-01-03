@@ -9,6 +9,7 @@
 
 //Addons
 #include "ofxUI.h"
+#include "ofxTweener.h"
 
 #define SANDRES (6)
 #define POINT_MAXSIZE (8.00)
@@ -37,8 +38,8 @@ class testApp : public ofxiPhoneApp{
     
     // -------------------------- //
 
-    static const int DOT_HORIZONAL_NUM = 640 / SANDRES / 2;
-    static const int DOT_VERTICAL_NUM = 1136 / SANDRES;
+    static const int DOT_HORIZONAL_NUM = 640 / SANDRES / 2 * 1.2;  //touch reaction Buffer
+    static const int DOT_VERTICAL_NUM = 1136 / SANDRES * 1.2;   //touch reaction Buffer
     
     ofEasyCam cam; // camera
     ofVbo myVbo; // VBO
@@ -62,13 +63,26 @@ class testApp : public ofxiPhoneApp{
     bool mIsSmoothPoint;
     bool mIsSpace;
     
-    ///
-    //Main
+    void guiEvent(ofxUIEventArgs &e);
+    
+    
+private:
+    
+    void initGUILayout();
     ofxUICanvas *guiCanvas;
     ofxUILabel *label;
     
-    void initGUILayout();
-    void guiEvent(ofxUIEventArgs &e);
+    enum WidgetState
+    {
+        WidgetOpened,
+        WidgetClosed
+    };
+    
+    WidgetState mWidgetState;
+    float mGUISlidePos;             //結局の制御ターゲットはこの変数
+
+    bool isGUIWidgetActive();
+    void changeWidgetState( WidgetState nextState );
     
 };
 

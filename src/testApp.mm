@@ -3,6 +3,9 @@
 #define BUFSIZE (9216 * 4)
 #define DISP_RATIO ((ofGetWidth() / 768.0))
 
+#define WIDGET_OPENED_POSX (0)
+#define WIDGET_CLOSED_POSX ( - ofGetWidth() * 0.7)
+
 //--------------------------------------------------------------
 void testApp::setup(){	
 	// initialize the accelerometer
@@ -52,9 +55,8 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update(){
     
-    const static float springK = 1.05;
+    const static float springK = 1.4;
     const static float DumperK = -0.1;
-    
     
     int WIDTH = DOT_HORIZONAL_NUM;
     int HEIGHT = DOT_VERTICAL_NUM;
@@ -68,14 +70,14 @@ void testApp::update(){
                 //even
                 myVerts[index].x = 2 * i * SANDRES * mPointIntervalRate;
                 myVerts[index].y = (1 * j) * SANDRES * mPointIntervalRate;
-                myVerts[index].z += myVectors[index];
+                myVerts[index].z += 0.05 * myVectors[index];
 
             }else
             {
                 //odd
                 myVerts[index].x = (2 * i + 1) * SANDRES * mPointIntervalRate;
                 myVerts[index].y = (1 * j) * SANDRES * mPointIntervalRate;
-                myVerts[index].z += myVectors[index];
+                myVerts[index].z += 0.05 * myVectors[index];
             }
             
             myForces[index] = springK * (0 - myVerts[index].z) + DumperK * myVectors[index];
@@ -85,9 +87,7 @@ void testApp::update(){
             
             float sat = 0.5;//
             float bri = 1.0;//
-            //0.8 + 1.0 / ( 1.0 + 0.05 * (float)sqrt( pow( (mTouchPos.x - myVerts[index].x), 2 )
-            //+ pow( (mTouchPos.y - myVerts[index].y), 2 ) ) );
-            
+
             ofColor col;
             //TODO
             int HUE = (int)(255.0 * ( mHuePos + (float)j / ((float)HEIGHT * mHueScale ) ));
@@ -104,13 +104,13 @@ void testApp::update(){
             myColor[j * WIDTH + i].set(col.r / 255.5, col.g / 255.5, col.b / 255.5, a);
             
             // touch なにかする？
-            if(isTouched)
+            if(isTouched && !isGUIWidgetActive())
             {
                  float targetZ = ((myVerts[index].x - mTouchPos.x) * (myVerts[index].x - mTouchPos.x)
                                            +
                                            (myVerts[index].y - mTouchPos.y) * (myVerts[index].y - mTouchPos.y)
                                            );
-//                /targetZ = 2000.0 / (1.0 + 0.3 * targetZ );
+                
                 targetZ = 500*exp(-0.00005 * targetZ);
                 
                 myVerts[index].z += ( targetZ - myVerts[index].z) * 0.5;
@@ -119,8 +119,9 @@ void testApp::update(){
     }
     int NUM_PARTICLES = DOT_HORIZONAL_NUM * DOT_VERTICAL_NUM;
     myVbo.updateVertexData(myVerts, NUM_PARTICLES);
-    myVbo.updateColorData(myColor, NUM_PARTICLES);///(/myVerts, NUM_PARTICLES);
-
+    myVbo.updateColorData(myColor, NUM_PARTICLES);
+    
+    Tweener.update();
 }
 
 //--------------------------------------------------------------
@@ -128,6 +129,8 @@ void testApp::draw(){
 	//rendering here something..
     
     ofPushMatrix();
+    
+    glTranslatef(-640 * 0.1, - 1136 * 0.1, 0);
     
     if(mIsSmoothPoint)
     {
@@ -137,22 +140,18 @@ void testApp::draw(){
         glDisable(GL_POINT_SMOOTH);
     }
     
-    glPointSize(mPointSize * mPointIntervalRate);
-    
     ofEnableBlendMode(OF_BLENDMODE_ADD);
- 
     static GLfloat distance[] = { 0.0, 0.0, 0.0001 };
     glPointParameterfv(GL_POINT_DISTANCE_ATTENUATION, distance);
     glPointSize(20 * mPointSize * mPointIntervalRate);
-    
     myVbo.draw(GL_POINTS, 0, DOT_HORIZONAL_NUM * DOT_VERTICAL_NUM);
-    
     ofPopMatrix();
     
     ofSetColor(255, 255, 255);
     
     ofSetupScreen();
     
+    ofTranslate(mGUISlidePos, 0);
 }
 
 //--------------------------------------------------------------
@@ -162,37 +161,74 @@ void testApp::exit(){
 
 //--------------------------------------------------------------
 void testApp::touchDown(ofTouchEventArgs & touch){
+
     isTouched = true;
 
     mTouchPos.x = touch.x * 1;
     mTouchPos.y = touch.y * 1;// -ofGetHeight() * 1.0;
-    
-    cout << mTouchPos.x << "," << mTouchPos.y << endl;
-    
-    
+
     mTouchPosEx = mTouchDownPos = mTouchPos;
 }
 
 //--------------------------------------------------------------
 void testApp::touchMoved(ofTouchEventArgs & touch){
+        
+    if(touch.numTouches != 1)
+        return;
     
-    if(touch.numTouches == 1)
+    mTouchPos.x = touch.x * 1;
+    mTouchPos.y = touch.y * 1;// -ofGetHeight() * 1.0;
+    mHuePos += (mTouchPos.y - mTouchPosEx.y) * -0.001;
+    
+    //-----Widgetz 初期の動きFBを付けること。
+    if( abs(mTouchDownPos.x - mTouchPos.x) >  2 * abs(mTouchDownPos.y - mTouchPos.y))
     {
-        mTouchPos.x = touch.x * 1;
-        mTouchPos.y = touch.y * 1;// -ofGetHeight() * 1.0;
+        //横方向への移動が支配的の時、
         
-        mHuePos += (mTouchPos.y - mTouchPosEx.y) * -0.001;
-        
-        mTouchPosEx = mTouchPos;
+        if(mTouchPos.x - mTouchDownPos.x > 0)
+        {
+            //右方向へのDrag
+                    
+            if( mTouchPos.x - mTouchDownPos.x > ofGetWidth() * 0.33)
+            {
+                //OPEN
+                changeWidgetState(WidgetOpened);
+                
+            }else if( mTouchPos.x - mTouchDownPos.x > ofGetWidth() * 0.20)
+            {
+                mGUISlidePos += (mTouchPos.x - mTouchPosEx.x) * 0.5;
+            }
+            
+        }else
+        {
+            //左方向へのDrag
+            if(mTouchPos.x - mTouchDownPos.x < - ofGetWidth() * 0.33)
+            {
+                //CLOSE
+                changeWidgetState(WidgetClosed);
+            }else if( mTouchPos.x - mTouchDownPos.x < - ofGetWidth() * 0.20)
+            {
+                mGUISlidePos += (mTouchPos.x - mTouchPosEx.x) * 0.5;
+            }
+            
+            
+        }
     }
+    
+    /////
+    mTouchPosEx = mTouchPos;
+    
 }
 
 //--------------------------------------------------------------
 void testApp::touchUp(ofTouchEventArgs & touch){
+    
     isTouched = false;
     mTouchPos.x = touch.x * 1;
     mTouchPos.y = touch.y * 1;// -ofGetHeight() * 1.0;
-
+    
+    //吸着させる。
+    changeWidgetState(mWidgetState);
 }
 
 //--------------------------------------------------------------
@@ -211,6 +247,10 @@ void testApp::touchCancelled(ofTouchEventArgs & touch){
 
 void testApp :: touchTwoFinger ( ofkMultiTouchEventArgs &multiTouch )
 {
+    //Check GUI Widget
+    if(isGUIWidgetActive())
+        return;
+    
     if(abs(multiTouch.angleDif) > 2.0)
     {
         //ROTATE
@@ -262,27 +302,37 @@ void testApp::deviceOrientationChanged(int newOrientation){
 
 void testApp::initGUILayout()
 {
+    float WidgetWidth = ofGetWidth() * 0.7;
     int xInit = OFX_UI_GLOBAL_WIDGET_SPACING;
-    int FONT_LARGE = (int) 20 * DISP_RATIO;
-    int FONT_MID= (int) 15 * DISP_RATIO;
-    int FONT_SMALL= (int) 10 * DISP_RATIO;
+    int FONT_LARGE = (int) 30 * DISP_RATIO;
+    int FONT_MID= (int) 25 * DISP_RATIO;
+    int FONT_SMALL= (int) 20 * DISP_RATIO;
     int dim =  70;
-    float length = ofGetWidth() / 2 - xInit;
+    float length = WidgetWidth - xInit;
     
     //-guiHeader-----------------------------------------------------------//
     
     float guiHeaderHEIGHT = 2.0;
     
-    guiCanvas = new ofxUICanvas(0,0 ,ofGetWidth(),ofGetHeight() * guiHeaderHEIGHT);
+    guiCanvas = new ofxUICanvas(0,0 ,WidgetWidth,ofGetHeight() * guiHeaderHEIGHT);
     
-    guiCanvas->setTheme(OFX_UI_THEME_HACKER);
+    //guiCanvas->setTheme(OFX_UI_THEME_HACKER);
     
+    ofColor cb = ofColor( 0*255.0, 0*255.0, 0*255.0, 0.7*255.0 );
+     ofColor co = ofColor( 0.254902*255.0, 0.239216*255.0, 0.239216*255.0, 0.392157*255.0 );
+     ofColor coh = ofColor( 0.294118*255.0, 0*255.0, 0.0588235*255.0, 0.784314*255.0 );
+     ofColor cf = ofColor( 0.784314*255.0, 1*255.0, 0*255.0, 0.784314*255.0 );
+     ofColor cfh = ofColor( 0.980392*255.0, 0.00784314*255.0, 0.235294*255.0, 1*255.0 );
+     ofColor cp = ofColor( 0.0156863*255.0, 0*255.0, 0.0156863*255.0, 0.392157*255.0 );
+     ofColor cpo = ofColor( 0.254902*255.0, 0.239216*255.0, 0.239216*255.0, 0.784314*255.0 );
+     guiCanvas->setUIColors( cb, co, coh, cf, cfh, cp, cpo );
+     
     guiCanvas->setFont("Roboto-Light.ttf");
     guiCanvas->setFontSize(OFX_UI_FONT_LARGE , FONT_LARGE);
     guiCanvas->setFontSize(OFX_UI_FONT_MEDIUM , FONT_MID);
-    
     guiCanvas->setFontSize(OFX_UI_FONT_SMALL , FONT_SMALL);
     
+    /*
     {
         guiCanvas->addFPSSlider("FPS", length-xInit, 50);
         guiCanvas->addWidgetDown(new ofxUILabel("Dot Light Debug", OFX_UI_FONT_LARGE));
@@ -295,33 +345,47 @@ void testApp::initGUILayout()
         guiCanvas->addSlider("POINT_BrightNess", 0.1, 1.0, &mPointBrightNess, length-xInit, 60);
         
         guiCanvas->addToggle("POINT_SMOOTH", &mIsSmoothPoint, dim, 60);
-        guiCanvas->addToggle("POINT_SPARSE", &mIsSpace, dim, 60);
-        
         
         guiCanvas->addWidgetDown(new ofxUISpacer(length-xInit, 1));
 
         guiCanvas->addSlider("HUE", 1.0, 10.0, &mHuePos, length-xInit, 60);
         guiCanvas->addSlider("HUE_SCALE", 1.0, 10.0, &mHueScale, length-xInit, 60);
+    
+    }
+     */
+    
+    {
 
+        guiCanvas->addWidgetDown(new ofxUILabel("DotLight Settings", OFX_UI_FONT_LARGE));
+
+        guiCanvas->addSpacer(length-xInit, 100)->setVisible(false);
+        guiCanvas->addSpacer(length-xInit, 1)->setVisible(true);
         
+        guiCanvas->addWidgetDown(new ofxUILabel("Dot Size", OFX_UI_FONT_MEDIUM));
+        ofxUISlider *pSlider = new ofxUISlider(length-xInit, 60, 0.5, 3.3, &mPointSize, "");
+        pSlider->getLabel()->setVisible(false);
+        guiCanvas->addWidgetDown(pSlider);
+        
+        guiCanvas->addWidgetDown(new ofxUILabel("Dot Interval", OFX_UI_FONT_MEDIUM));
+        pSlider = new ofxUISlider(length-xInit, 60, 1.0, 10.0, &mPointIntervalRate, "");
+        pSlider->getLabel()->setVisible(false);
+        guiCanvas->addWidgetDown(pSlider);
+
+        guiCanvas->addWidgetDown(new ofxUILabel("Brightness", OFX_UI_FONT_MEDIUM));
+        pSlider = new ofxUISlider(length-xInit, 60, 0.1, 1.0, &mPointBrightNess, "");
+        pSlider->getLabel()->setVisible(false);
+        guiCanvas->addWidgetDown(pSlider);
         
         guiCanvas->addWidgetDown(new ofxUISpacer(length-xInit, 1));
-        
-        vector<string> names;
-        names.push_back("PointSmooth");
-        names.push_back("HIGH");
-        names.push_back("MEDIUM");
-        names.push_back("LOW");
-        names.push_back("WORST");
-        
-//       guiCanvas->addWidgetDown(new ofxUIRadio( dim *2, dim, "Debug", names, OFX_UI_ORIENTATION_VERTICAL));
-        
-        //label = new ofxUILabel("Data size", 70);
-        //guiCanvas->addWidgetDown(label);
-        
     }
     
     ofAddListener(guiCanvas->newGUIEvent, this, &testApp::guiEvent);
+    
+    
+    // ----------- Widget State Init -------//
+    
+    mWidgetState = WidgetClosed;
+    mGUISlidePos = WIDGET_CLOSED_POSX;
 }
 
 void testApp::guiEvent(ofxUIEventArgs &e)
@@ -370,5 +434,38 @@ void testApp::guiEvent(ofxUIEventArgs &e)
         }
     }
      */
+}
+
+bool testApp::isGUIWidgetActive()
+{
+    bool res = false;
+    
+    if(WIDGET_OPENED_POSX == mWidgetState)
+    {
+        if( abs( WIDGET_OPENED_POSX - mGUISlidePos ) < 2.0 )
+        {
+            res = true;
+        }
+    }
+    return res;
+}
+
+void testApp::changeWidgetState( WidgetState nextState)
+{
+    //アニメーション追加する；
+    if(true)//s mWidgetState != nextState)
+    {
+        if(WidgetOpened == nextState)
+        {
+            Tweener.addTween(mGUISlidePos, WIDGET_OPENED_POSX, 0.2, &ofxTransitions::easeOutQuint);
+            //guiCanvas->setState(int _state);
+            
+        }else if (WidgetClosed == nextState)
+        {
+            Tweener.addTween(mGUISlidePos, WIDGET_CLOSED_POSX, 0.2, &ofxTransitions::easeOutQuint);
+        }
+        
+        mWidgetState = nextState;
+    }
 }
 
