@@ -52,7 +52,6 @@ class testApp : public ofxiPhoneApp{
     ofPoint mTouchPos;
     ofPoint mTouchPosEx;
     ofPoint mTouchDownPos;
-    
 
     float mHuePos;
     float mHueScale;
