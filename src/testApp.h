@@ -84,8 +84,9 @@ private:
     void changeWidgetState( WidgetState nextState );
   
     ///
-    
     ofkglImageRenderer mSplashImage;
+    ofkglImageRenderer mHelpImage;
+    
 };
 
 

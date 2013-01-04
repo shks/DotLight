@@ -77,6 +77,31 @@ void testApp::setup(){
     mSplashImage.a = 1.0;
     
     Tweener.addTween(mSplashImage.a, 0.0, 1.0, &ofxTransitions::easeOutQuint, Delaytime);
+    
+    
+    
+    
+    //mHelpImage
+    
+    if(ofGetHeight() == 960)
+    {
+        mHelpImage.setImageFile("help@2x.png");
+    }
+    else if(ofGetHeight() == 1136)
+    {
+        mHelpImage.setImageFile("help-568h@2x.png");
+    }
+    else if(ofGetHeight() == 480)
+    {
+        mHelpImage.setImageFile("help.png");
+    }
+    
+    mHelpImage.useImageSize();
+    mHelpImage.x = ofGetWidth() / 2.0;
+    mHelpImage.y = ofGetHeight() / 2.0;
+    mHelpImage.a = 0.0;
+    
+    Tweener.addTween(mHelpImage.a, 1.0, 1.0, &ofxTransitions::easeOutQuint, Delaytime + 1.0);
 }
 
 //--------------------------------------------------------------
@@ -179,7 +204,7 @@ void testApp::draw(){
     
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
     mSplashImage.render();
-    
+    mHelpImage.render();
     ofTranslate(mGUISlidePos, 0);
 }
 
@@ -266,6 +291,11 @@ void testApp::touchUp(ofTouchEventArgs & touch){
     
     //吸着させる。
     changeWidgetState(mWidgetState);
+    
+    if(mHelpImage.a > 0.1)
+    {
+        Tweener.addTween(mHelpImage.a, 0.0, 1.0, &ofxTransitions::easeOutQuint);
+    }
 }
 
 //--------------------------------------------------------------
