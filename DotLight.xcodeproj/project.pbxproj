@@ -26,6 +26,7 @@
 		57AB6CF9167FE07E000C1B18 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57AB6CEC167FE07E000C1B18 /* ofxXmlSettings.cpp */; };
 		57AB6D0D16804B1C000C1B18 /* ofkMultiTouchEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57AB6D0B16804B1C000C1B18 /* ofkMultiTouchEvent.cpp */; };
 		57AB6D1016804B46000C1B18 /* perlin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57AB6D0E16804B46000C1B18 /* perlin.cpp */; };
+		57D3DF811695D31400F22E7E /* ofkglImageRenderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 57D3DF7F1695D31400F22E7E /* ofkglImageRenderer.cpp */; };
 		BB16EBD20F2B2A9500518274 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB16EBD10F2B2A9500518274 /* OpenGLES.framework */; };
 		BB16EBD90F2B2AB500518274 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BB16EBD80F2B2AB500518274 /* QuartzCore.framework */; };
 		BB24DD8F10DA77E000E9C588 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = BB24DD8C10DA77E000E9C588 /* Default.png */; };
@@ -130,6 +131,8 @@
 		57AB6D0C16804B1C000C1B18 /* ofkMultiTouchEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofkMultiTouchEvent.h; path = ../../../../../ofkTools/ofkMultiTouchEvent.h; sourceTree = "<group>"; };
 		57AB6D0E16804B46000C1B18 /* perlin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = perlin.cpp; path = ../../../../../ofkTools/perlin.cpp; sourceTree = "<group>"; };
 		57AB6D0F16804B46000C1B18 /* perlin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = perlin.h; path = ../../../../../ofkTools/perlin.h; sourceTree = "<group>"; };
+		57D3DF7F1695D31400F22E7E /* ofkglImageRenderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofkglImageRenderer.cpp; path = ../../../../../ofkTools/ofkglImageRenderer.cpp; sourceTree = "<group>"; };
+		57D3DF801695D31400F22E7E /* ofkglImageRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofkglImageRenderer.h; path = ../../../../../ofkTools/ofkglImageRenderer.h; sourceTree = "<group>"; };
 		BB16EBD10F2B2A9500518274 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		BB16EBD80F2B2AB500518274 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		BB24DD8C10DA77E000E9C588 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
@@ -347,6 +350,8 @@
 		57AB6D0A16804B0A000C1B18 /* ofk */ = {
 			isa = PBXGroup;
 			children = (
+				57D3DF7F1695D31400F22E7E /* ofkglImageRenderer.cpp */,
+				57D3DF801695D31400F22E7E /* ofkglImageRenderer.h */,
 				57AB6D0E16804B46000C1B18 /* perlin.cpp */,
 				57AB6D0F16804B46000C1B18 /* perlin.h */,
 				57AB6D0B16804B1C000C1B18 /* ofkMultiTouchEvent.cpp */,
@@ -537,6 +542,7 @@
 				57AB6CF9167FE07E000C1B18 /* ofxXmlSettings.cpp in Sources */,
 				57AB6D0D16804B1C000C1B18 /* ofkMultiTouchEvent.cpp in Sources */,
 				57AB6D1016804B46000C1B18 /* perlin.cpp in Sources */,
+				57D3DF811695D31400F22E7E /* ofkglImageRenderer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

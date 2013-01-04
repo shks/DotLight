@@ -50,6 +50,33 @@ void testApp::setup(){
     //multiTouch Enable
     multiTouchEvent.enable();
     ofAddListener(multiTouchEvent.touchTwoFingerEvent, this, &testApp::touchTwoFinger);
+    
+    
+    
+    //Splash Image
+    float Delaytime = 1.2;
+    if(ofGetHeight() == 960)
+    {
+        mSplashImage.setImageFile("Default@2x.png");
+        Delaytime = 1.0;
+    }
+    else if(ofGetHeight() == 1136)
+    {
+        mSplashImage.setImageFile("Default-568h@2x.png");
+        Delaytime = 1.5;
+    }
+    else if(ofGetHeight() == 480)
+    {
+        mSplashImage.setImageFile("Default.png");
+        Delaytime = 0.2;
+    }
+    
+    mSplashImage.useImageSize();
+    mSplashImage.x = ofGetWidth() / 2.0;
+    mSplashImage.y = ofGetHeight() / 2.0;
+    mSplashImage.a = 1.0;
+    
+    Tweener.addTween(mSplashImage.a, 0.0, 1.0, &ofxTransitions::easeOutQuint, Delaytime);
 }
 
 //--------------------------------------------------------------
@@ -68,16 +95,16 @@ void testApp::update(){
             if(j % 2 == 0)
             {
                 //even
-                myVerts[index].x = 2 * i * SANDRES * mPointIntervalRate;
-                myVerts[index].y = (1 * j) * SANDRES * mPointIntervalRate;
-                myVerts[index].z += 0.05 * myVectors[index];
+                myVerts[index].x = 2 * (i - 5) * SANDRES * mPointIntervalRate;
+                myVerts[index].y = (1 * (j - 5)) * SANDRES * mPointIntervalRate;
+                myVerts[index].z += 0.1* myVectors[index];
 
             }else
             {
                 //odd
-                myVerts[index].x = (2 * i + 1) * SANDRES * mPointIntervalRate;
-                myVerts[index].y = (1 * j) * SANDRES * mPointIntervalRate;
-                myVerts[index].z += 0.05 * myVectors[index];
+                myVerts[index].x = (2 * (i - 5) + 1) * SANDRES * mPointIntervalRate;
+                myVerts[index].y = (1 * (j - 5)) * SANDRES * mPointIntervalRate;
+                myVerts[index].z += 0.1 * myVectors[index];
             }
             
             myForces[index] = springK * (0 - myVerts[index].z) + DumperK * myVectors[index];
@@ -108,8 +135,7 @@ void testApp::update(){
             {
                  float targetZ = ((myVerts[index].x - mTouchPos.x) * (myVerts[index].x - mTouchPos.x)
                                            +
-                                           (myVerts[index].y - mTouchPos.y) * (myVerts[index].y - mTouchPos.y)
-                                           );
+                                (myVerts[index].y - mTouchPos.y) * (myVerts[index].y - mTouchPos.y));
                 
                 targetZ = 500*exp(-0.00005 * targetZ);
                 
@@ -130,7 +156,7 @@ void testApp::draw(){
     
     ofPushMatrix();
     
-    glTranslatef(-640 * 0.1, - 1136 * 0.1, 0);
+    //glTranslatef(-640 * 0.1, - 1136 * 0.1, 0);
     
     if(mIsSmoothPoint)
     {
@@ -150,6 +176,9 @@ void testApp::draw(){
     ofSetColor(255, 255, 255);
     
     ofSetupScreen();
+    
+    ofEnableBlendMode(OF_BLENDMODE_ALPHA);
+    mSplashImage.render();
     
     ofTranslate(mGUISlidePos, 0);
 }
@@ -187,7 +216,7 @@ void testApp::touchMoved(ofTouchEventArgs & touch){
         
         if(mTouchPos.x - mTouchDownPos.x > 0)
         {
-            //右方向へのDrag
+            //右方向へのDrag // CLOSE to OPEN
                     
             if( mTouchPos.x - mTouchDownPos.x > ofGetWidth() * 0.33)
             {
@@ -196,28 +225,36 @@ void testApp::touchMoved(ofTouchEventArgs & touch){
                 
             }else if( mTouchPos.x - mTouchDownPos.x > ofGetWidth() * 0.20)
             {
-                mGUISlidePos += (mTouchPos.x - mTouchPosEx.x) * 0.5;
+                //CLOSEDの時に、
+                if( mWidgetState == WidgetClosed)
+                {
+                    mGUISlidePos += (mTouchPos.x - mTouchPosEx.x) * 0.9;
+                }
             }
             
         }else
         {
-            //左方向へのDrag
-            if(mTouchPos.x - mTouchDownPos.x < - ofGetWidth() * 0.33)
+            //左方向へのDrag // OPEN to CLOSE
+            
+            if( guiCanvas->getWidgetHit(mTouchPos.x, mTouchPos.y) == NULL)
             {
-                //CLOSE
-                changeWidgetState(WidgetClosed);
-            }else if( mTouchPos.x - mTouchDownPos.x < - ofGetWidth() * 0.20)
-            {
-                mGUISlidePos += (mTouchPos.x - mTouchPosEx.x) * 0.5;
+                
+                if(mTouchPos.x - mTouchDownPos.x < - ofGetWidth() * 0.33)
+                {
+                    //CLOSE
+                    changeWidgetState(WidgetClosed);
+                }else if( mTouchPos.x - mTouchDownPos.x < - ofGetWidth() * 0.20)
+                {
+                    if( mWidgetState == WidgetOpened)
+                    {
+                        mGUISlidePos += (mTouchPos.x - mTouchPosEx.x) * 0.9;
+                    }
+                }                
             }
-            
-            
         }
     }
     
-    /////
     mTouchPosEx = mTouchPos;
-    
 }
 
 //--------------------------------------------------------------
@@ -233,10 +270,6 @@ void testApp::touchUp(ofTouchEventArgs & touch){
 
 //--------------------------------------------------------------
 void testApp::touchDoubleTap(ofTouchEventArgs & touch){
-
-    static bool isshow = false;
-    guiCanvas->setVisible(isshow);
-    isshow = !isshow;
 }
 
 
@@ -380,7 +413,7 @@ void testApp::initGUILayout()
     }
     
     ofAddListener(guiCanvas->newGUIEvent, this, &testApp::guiEvent);
-    
+    guiCanvas->disableTouchEventCallbacks();
     
     // ----------- Widget State Init -------//
     
@@ -390,50 +423,14 @@ void testApp::initGUILayout()
 
 void testApp::guiEvent(ofxUIEventArgs &e)
 {
-    /*
-    bool SyncEvent = false;
-    
     if(e.widget->getName() == "BEST")
     {
 		ofxUIButton *button = (ofxUIButton *) e.widget;
         if(button->getValue())
         {
-            mUDPjpegStream.setjpegQuality(OF_IMAGE_QUALITY_BEST);
         }
     }
-    else if(e.widget->getName() == "HIGH")
-    {
-		ofxUIButton *button = (ofxUIButton *) e.widget;
-        if(button->getValue())
-        {
-            mUDPjpegStream.setjpegQuality(OF_IMAGE_QUALITY_HIGH);
-        }
-    }
-    else if(e.widget->getName() == "MEDIUM")
-    {
-		ofxUIButton *button = (ofxUIButton *) e.widget;
-        if(button->getValue())
-        {
-            mUDPjpegStream.setjpegQuality(OF_IMAGE_QUALITY_MEDIUM);
-        }
-    }
-    else if(e.widget->getName() == "LOW")
-    {
-		ofxUIButton *button = (ofxUIButton *) e.widget;
-        if(button->getValue())
-        {
-            mUDPjpegStream.setjpegQuality(OF_IMAGE_QUALITY_LOW);
-        }
-    }
-    else if(e.widget->getName() == "WORST")
-    {
-		ofxUIButton *button = (ofxUIButton *) e.widget;
-        if(button->getValue())
-        {
-            mUDPjpegStream.setjpegQuality(OF_IMAGE_QUALITY_WORST);
-        }
-    }
-     */
+
 }
 
 bool testApp::isGUIWidgetActive()
@@ -442,10 +439,10 @@ bool testApp::isGUIWidgetActive()
     
     if(WIDGET_OPENED_POSX == mWidgetState)
     {
-        if( abs( WIDGET_OPENED_POSX - mGUISlidePos ) < 2.0 )
-        {
+        //if( abs( WIDGET_OPENED_POSX - mGUISlidePos ) < 2.0 )
+        //{
             res = true;
-        }
+        //}
     }
     return res;
 }
@@ -453,18 +450,18 @@ bool testApp::isGUIWidgetActive()
 void testApp::changeWidgetState( WidgetState nextState)
 {
     //アニメーション追加する；
-    if(true)//s mWidgetState != nextState)
+    if(true)
     {
         if(WidgetOpened == nextState)
         {
             Tweener.addTween(mGUISlidePos, WIDGET_OPENED_POSX, 0.2, &ofxTransitions::easeOutQuint);
-            //guiCanvas->setState(int _state);
             
+            guiCanvas->enableTouchEventCallbacks();
         }else if (WidgetClosed == nextState)
         {
             Tweener.addTween(mGUISlidePos, WIDGET_CLOSED_POSX, 0.2, &ofxTransitions::easeOutQuint);
+            guiCanvas->disableTouchEventCallbacks();
         }
-        
         mWidgetState = nextState;
     }
 }

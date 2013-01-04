@@ -6,7 +6,7 @@
 
 //ofkTools
 #include "ofkMultiTouchEvent.h"
-
+#include "ofkglImageRenderer.h"
 //Addons
 #include "ofxUI.h"
 #include "ofxTweener.h"
@@ -82,7 +82,10 @@ private:
 
     bool isGUIWidgetActive();
     void changeWidgetState( WidgetState nextState );
+  
+    ///
     
+    ofkglImageRenderer mSplashImage;
 };
 
 

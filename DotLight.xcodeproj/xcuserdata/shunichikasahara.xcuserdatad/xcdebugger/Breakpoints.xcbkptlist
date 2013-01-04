@@ -34,13 +34,26 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          filePath = "src/testApp.mm"
-         timestampString = "378865758.358926"
+         timestampString = "379006137.399408"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "136"
-         endingLineNumber = "136"
+         startingLineNumber = "162"
+         endingLineNumber = "162"
          landmarkName = "testApp::draw()"
          landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         filePath = "src/testApp.h"
+         timestampString = "379005998.033791"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "74"
+         endingLineNumber = "74"
+         landmarkName = "class testApp"
+         landmarkType = "3">
       </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>
