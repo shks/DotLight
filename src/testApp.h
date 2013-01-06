@@ -52,6 +52,7 @@ class testApp : public ofxiPhoneApp{
     ofPoint mTouchPos;
     ofPoint mTouchPosEx;
     ofPoint mTouchDownPos;
+    bool isRitghDragOneDirection;
 
     float mHuePos;
     float mHueScale;

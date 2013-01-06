@@ -222,57 +222,68 @@ void testApp::touchDown(ofTouchEventArgs & touch){
     mTouchPos.y = touch.y * 1;// -ofGetHeight() * 1.0;
 
     mTouchPosEx = mTouchDownPos = mTouchPos;
+    isRitghDragOneDirection = true;
 }
 
 //--------------------------------------------------------------
 void testApp::touchMoved(ofTouchEventArgs & touch){
         
     if(touch.numTouches != 1)
+    {
+        isTouched = false;
         return;
+    }
     
     mTouchPos.x = touch.x * 1;
     mTouchPos.y = touch.y * 1;// -ofGetHeight() * 1.0;
     mHuePos += (mTouchPos.y - mTouchPosEx.y) * -0.001;
-    
+        
     //-----Widgetz 初期の動きFBを付けること。
     if( abs(mTouchDownPos.x - mTouchPos.x) >  2 * abs(mTouchDownPos.y - mTouchPos.y))
     {
-        //横方向への移動が支配的の時、
+        //横方向への移動が支配的の時、 // CLOSE TO OPEN
         
         if(mTouchPos.x - mTouchDownPos.x > 0)
         {
             //右方向へのDrag // CLOSE to OPEN
-                    
-            if( mTouchPos.x - mTouchDownPos.x > ofGetWidth() * 0.33)
+            if(isRitghDragOneDirection)
             {
-                //OPEN
-                changeWidgetState(WidgetOpened);
-                
-            }else if( mTouchPos.x - mTouchDownPos.x > ofGetWidth() * 0.20)
-            {
-                //CLOSEDの時に、
-                if( mWidgetState == WidgetClosed)
+                if( mTouchPos.x - mTouchDownPos.x > ofGetWidth() * 0.33)
                 {
-                    mGUISlidePos += (mTouchPos.x - mTouchPosEx.x) * 0.9;
+                    //OPEN
+                    changeWidgetState(WidgetOpened);
+                    
+                }else if( mTouchPos.x - mTouchDownPos.x > ofGetWidth() * 0.20)
+                {
+                    guiCanvas->setVisible(true);
+                    
+                    //CLOSEDの時に、
+                    if( mWidgetState == WidgetClosed)
+                    {
+                        mGUISlidePos += (mTouchPos.x - mTouchPosEx.x) * 0.9;
+                    }
                 }
             }
-            
+
         }else
         {
             //左方向へのDrag // OPEN to CLOSE
             
+            isRitghDragOneDirection = false;
+            
+            
             if( guiCanvas->getWidgetHit(mTouchPos.x, mTouchPos.y) == NULL)
             {
                 
-                if(mTouchPos.x - mTouchDownPos.x < - ofGetWidth() * 0.33)
+                if(mTouchPos.x - mTouchDownPos.x < - ofGetWidth() * 0.25)
                 {
                     //CLOSE
                     changeWidgetState(WidgetClosed);
-                }else if( mTouchPos.x - mTouchDownPos.x < - ofGetWidth() * 0.20)
+                }else if( mTouchPos.x - mTouchDownPos.x < - ofGetWidth() * 0.10)
                 {
                     if( mWidgetState == WidgetOpened)
                     {
-                        mGUISlidePos += (mTouchPos.x - mTouchPosEx.x) * 0.9;
+                        mGUISlidePos += (mTouchPos.x - mTouchPosEx.x) * 2.0;
                     }
                 }                
             }
@@ -370,7 +381,6 @@ void testApp::initGUILayout()
     int FONT_LARGE = (int) 30 * DISP_RATIO;
     int FONT_MID= (int) 25 * DISP_RATIO;
     int FONT_SMALL= (int) 20 * DISP_RATIO;
-    int dim =  70;
     float length = WidgetWidth - xInit;
     
     //-guiHeader-----------------------------------------------------------//
@@ -394,28 +404,6 @@ void testApp::initGUILayout()
     guiCanvas->setFontSize(OFX_UI_FONT_LARGE , FONT_LARGE);
     guiCanvas->setFontSize(OFX_UI_FONT_MEDIUM , FONT_MID);
     guiCanvas->setFontSize(OFX_UI_FONT_SMALL , FONT_SMALL);
-    
-    /*
-    {
-        guiCanvas->addFPSSlider("FPS", length-xInit, 50);
-        guiCanvas->addWidgetDown(new ofxUILabel("Dot Light Debug", OFX_UI_FONT_LARGE));
-        guiCanvas->addWidgetDown(new ofxUILabel("Double Tap to Swicth Debug", OFX_UI_FONT_LARGE));
-        //guiCanvas->addWidgetDown(new ofxUIFPSSlider("FPS", ofGetWidth() - 2 * xInit, 50,15));
-        guiCanvas->addWidgetDown(new ofxUISpacer(length-xInit, 1));
-        
-        guiCanvas->addSlider("POINT_SIZE", 1.0, 10.0, &mPointSize, length-xInit, 60);
-        guiCanvas->addSlider("POINT_INTERVAL", 1.0, 10.0, &mPointIntervalRate, length-xInit, 60);
-        guiCanvas->addSlider("POINT_BrightNess", 0.1, 1.0, &mPointBrightNess, length-xInit, 60);
-        
-        guiCanvas->addToggle("POINT_SMOOTH", &mIsSmoothPoint, dim, 60);
-        
-        guiCanvas->addWidgetDown(new ofxUISpacer(length-xInit, 1));
-
-        guiCanvas->addSlider("HUE", 1.0, 10.0, &mHuePos, length-xInit, 60);
-        guiCanvas->addSlider("HUE_SCALE", 1.0, 10.0, &mHueScale, length-xInit, 60);
-    
-    }
-     */
     
     {
 
@@ -442,7 +430,7 @@ void testApp::initGUILayout()
         guiCanvas->addWidgetDown(new ofxUISpacer(length-xInit, 1));
     }
     
-    ofAddListener(guiCanvas->newGUIEvent, this, &testApp::guiEvent);
+    //ofAddListener(guiCanvas->newGUIEvent, this, &testApp::guiEvent);
     guiCanvas->disableTouchEventCallbacks();
     
     // ----------- Widget State Init -------//
@@ -469,10 +457,7 @@ bool testApp::isGUIWidgetActive()
     
     if(WIDGET_OPENED_POSX == mWidgetState)
     {
-        //if( abs( WIDGET_OPENED_POSX - mGUISlidePos ) < 2.0 )
-        //{
-            res = true;
-        //}
+        res = true;
     }
     return res;
 }
@@ -485,12 +470,18 @@ void testApp::changeWidgetState( WidgetState nextState)
         if(WidgetOpened == nextState)
         {
             Tweener.addTween(mGUISlidePos, WIDGET_OPENED_POSX, 0.2, &ofxTransitions::easeOutQuint);
+            guiCanvas->setVisible(true);
             
-            guiCanvas->enableTouchEventCallbacks();
+            printf("WidgetOpened /n");
+
         }else if (WidgetClosed == nextState)
         {
             Tweener.addTween(mGUISlidePos, WIDGET_CLOSED_POSX, 0.2, &ofxTransitions::easeOutQuint);
-            guiCanvas->disableTouchEventCallbacks();
+            guiCanvas->disable();
+            guiCanvas->setVisible(false);
+
+            printf("WidgetClosed /n");
+            
         }
         mWidgetState = nextState;
     }
