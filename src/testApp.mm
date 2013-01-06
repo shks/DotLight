@@ -50,9 +50,7 @@ void testApp::setup(){
     //multiTouch Enable
     multiTouchEvent.enable();
     ofAddListener(multiTouchEvent.touchTwoFingerEvent, this, &testApp::touchTwoFinger);
-    
-    
-    
+        
     //Splash Image
     float Delaytime = 1.2;
     if(ofGetHeight() == 960)
@@ -77,8 +75,6 @@ void testApp::setup(){
     mSplashImage.a = 1.0;
     
     Tweener.addTween(mSplashImage.a, 0.0, 1.0, &ofxTransitions::easeOutQuint, Delaytime);
-    
-    
     
     
     //mHelpImage
@@ -119,13 +115,16 @@ void testApp::setup(){
         
     }else if( abs(ofGetDay() - lastOpenedDay) > 6 )
     {
-        cout << "=--------- Open in different Week " << lastOpenedDay << endl;
+        //cout << "=--------- Open in different Week " << lastOpenedDay << endl;
         isShowHint = true;
     }
     
+    
+    //debug
+    isShowHint = true;
     if(isShowHint)
     {
-        Tweener.addTween(mHelpImage.a, 1.0, 1.0, &ofxTransitions::easeOutQuint, Delaytime + 1.0);        
+        Tweener.addTween(mHelpImage.a, 1.0, 1.0, &ofxTransitions::easeOutQuint, Delaytime + 0.2);
     }
     
     ofkXMLProperties::setLastOpenData();    
@@ -333,9 +332,12 @@ void testApp::touchUp(ofTouchEventArgs & touch){
     //吸着させる。
     changeWidgetState(mWidgetState);
     
-    if(mHelpImage.a > 0.1)
+    if( mTouchPos.y > (ofGetHeight() * (1.0 - 200.0 / 960.0)) )
     {
-        Tweener.addTween(mHelpImage.a, 0.0, 1.0, &ofxTransitions::easeOutQuint);
+        if(mHelpImage.a > 0.1)
+        {
+            Tweener.addTween(mHelpImage.a, 0.0, 1.0, &ofxTransitions::easeOutQuint);
+        }
     }
     
     int WIDTH = DOT_HORIZONAL_NUM;
@@ -384,7 +386,7 @@ void testApp :: touchTwoFinger ( ofkMultiTouchEventArgs &multiTouch )
     if(abs(multiTouch.angleDif) * 5  > abs(multiTouch.pinchLengthDif))
     {
         //ROTATE
-        cout << "multiTouch.angleDif" << multiTouch.angleDif << endl;
+        //cout << "multiTouch.angleDif" << multiTouch.angleDif << endl;
         mPointSize += multiTouch.angleDif * -0.05;
         
         if(mPointSize < 0.5)
@@ -399,9 +401,8 @@ void testApp :: touchTwoFinger ( ofkMultiTouchEventArgs &multiTouch )
         
     }else{
         //PINCH
-        cout << "multiTouch.pinchLengthDif" << multiTouch.pinchLengthDif << endl;
+        //cout << "multiTouch.pinchLengthDif" << multiTouch.pinchLengthDif << endl;
     
-        
         mPointIntervalRate += multiTouch.pinchLengthDif * 0.01;
         
         if(mPointIntervalRate <1.0)
@@ -507,7 +508,6 @@ void testApp::guiEvent(ofxUIEventArgs &e)
         {
         }
     }
-
 }
 
 bool testApp::isGUIWidgetActive()
