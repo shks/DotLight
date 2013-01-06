@@ -10,6 +10,7 @@
 //Addons
 #include "ofxUI.h"
 #include "ofxTweener.h"
+#include "ofkXMLProperties.h"
 
 #define SANDRES (6)
 #define POINT_MAXSIZE (8.00)
@@ -87,6 +88,10 @@ private:
     ///
     ofkglImageRenderer mSplashImage;
     ofkglImageRenderer mHelpImage;
+    
+    
+    //debug
+    int debugInt;
     
 };
 

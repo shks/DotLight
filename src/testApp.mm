@@ -101,7 +101,35 @@ void testApp::setup(){
     mHelpImage.y = ofGetHeight() / 2.0;
     mHelpImage.a = 0.0;
     
-    Tweener.addTween(mHelpImage.a, 1.0, 1.0, &ofxTransitions::easeOutQuint, Delaytime + 1.0);
+    
+    /// -------------- XML Properties  ------------- --------------　 --------------//
+    ofkXMLProperties::setXMLFile("mySettings.xml");
+    int lastOpenedDay = ofkXMLProperties::getPropertyValue("SETTINGS::LastOpenDateDay", -1);
+    
+    //cout << "=--------- lastOpenedMonth" << lastOpenedDay << endl;
+    //cout << "=--------- lastOpenedSecond" << lastOpenedSEC << endl;
+
+    //NumOpenedEver
+    bool isShowHint = false;
+    int NumOpenedEver = ofkXMLProperties::getPropertyValue("SETTINGS::NumOpenedEver", -1);
+    if(NumOpenedEver == 0 )
+    {
+        //cout << "=--------- This is first Time Open " << NumOpenedEver << endl;
+        isShowHint = true;
+        
+    }else if( abs(ofGetDay() - lastOpenedDay) > 6 )
+    {
+        //cout << "=--------- Open in different Week " << lastOpenedDay << endl;
+        isShowHint = true;
+    }
+    
+    if(isShowHint)
+    {
+        Tweener.addTween(mHelpImage.a, 1.0, 1.0, &ofxTransitions::easeOutQuint, Delaytime + 1.0);        
+    }
+    
+    ofkXMLProperties::setLastOpenData();    
+    ofkXMLProperties::setPropertyValue("SETTINGS::NumOpenedEver", NumOpenedEver + 1);
 }
 
 //--------------------------------------------------------------
@@ -177,12 +205,8 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-	//rendering here something..
     
     ofPushMatrix();
-    
-    //glTranslatef(-640 * 0.1, - 1136 * 0.1, 0);
-    
     if(mIsSmoothPoint)
     {
         glEnable(GL_POINT_SMOOTH);
@@ -204,7 +228,11 @@ void testApp::draw(){
     
     ofEnableBlendMode(OF_BLENDMODE_ALPHA);
     mSplashImage.render();
-    mHelpImage.render();
+    
+    if(mHelpImage.a > 0.01)
+    {
+        mHelpImage.render();
+    }
     ofTranslate(mGUISlidePos, 0);
 }
 

@@ -12,6 +12,7 @@
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
 		5326AEA810A23A0500278DE6 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5326AEA710A23A0500278DE6 /* CoreLocation.framework */; };
 		53F323EB10A20EDB00E0DAE4 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */; };
+		575420A1169920B900A6A87D /* ofkXMLProperties.mm in Sources */ = {isa = PBXBuildFile; fileRef = 575420A0169920B900A6A87D /* ofkXMLProperties.mm */; };
 		57AB6CEE167FE07E000C1B18 /* changelog.txt in Resources */ = {isa = PBXBuildFile; fileRef = 57AB6CAD167FE07E000C1B18 /* changelog.txt */; };
 		57AB6CEF167FE07E000C1B18 /* install.xml in Resources */ = {isa = PBXBuildFile; fileRef = 57AB6CAE167FE07E000C1B18 /* install.xml */; };
 		57AB6CF0167FE07E000C1B18 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 57AB6CAF167FE07E000C1B18 /* LICENSE.txt */; };
@@ -70,6 +71,8 @@
 		32CA4F630368D1EE00C91783 /* iPhone_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iPhone_Prefix.pch; sourceTree = "<group>"; };
 		5326AEA710A23A0500278DE6 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		5754209F169920B900A6A87D /* ofkXMLProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofkXMLProperties.h; path = ../../../../../ofkTools/ofkXMLProperties.h; sourceTree = "<group>"; };
+		575420A0169920B900A6A87D /* ofkXMLProperties.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ofkXMLProperties.mm; path = ../../../../../ofkTools/ofkXMLProperties.mm; sourceTree = "<group>"; };
 		57AB6CAD167FE07E000C1B18 /* changelog.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = changelog.txt; sourceTree = "<group>"; };
 		57AB6CAE167FE07E000C1B18 /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
 		57AB6CAF167FE07E000C1B18 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
@@ -350,6 +353,8 @@
 		57AB6D0A16804B0A000C1B18 /* ofk */ = {
 			isa = PBXGroup;
 			children = (
+				5754209F169920B900A6A87D /* ofkXMLProperties.h */,
+				575420A0169920B900A6A87D /* ofkXMLProperties.mm */,
 				57D3DF7F1695D31400F22E7E /* ofkglImageRenderer.cpp */,
 				57D3DF801695D31400F22E7E /* ofkglImageRenderer.h */,
 				57AB6D0E16804B46000C1B18 /* perlin.cpp */,
@@ -543,6 +548,7 @@
 				57AB6D0D16804B1C000C1B18 /* ofkMultiTouchEvent.cpp in Sources */,
 				57AB6D1016804B46000C1B18 /* perlin.cpp in Sources */,
 				57D3DF811695D31400F22E7E /* ofkglImageRenderer.cpp in Sources */,
+				575420A1169920B900A6A87D /* ofkXMLProperties.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
