@@ -13,6 +13,7 @@
 		5326AEA810A23A0500278DE6 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5326AEA710A23A0500278DE6 /* CoreLocation.framework */; };
 		53F323EB10A20EDB00E0DAE4 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */; };
 		575420A1169920B900A6A87D /* ofkXMLProperties.mm in Sources */ = {isa = PBXBuildFile; fileRef = 575420A0169920B900A6A87D /* ofkXMLProperties.mm */; };
+		575420A316995F2700A6A87D /* mySettings.xml in Resources */ = {isa = PBXBuildFile; fileRef = 575420A216995F2700A6A87D /* mySettings.xml */; };
 		57AB6CEE167FE07E000C1B18 /* changelog.txt in Resources */ = {isa = PBXBuildFile; fileRef = 57AB6CAD167FE07E000C1B18 /* changelog.txt */; };
 		57AB6CEF167FE07E000C1B18 /* install.xml in Resources */ = {isa = PBXBuildFile; fileRef = 57AB6CAE167FE07E000C1B18 /* install.xml */; };
 		57AB6CF0167FE07E000C1B18 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 57AB6CAF167FE07E000C1B18 /* LICENSE.txt */; };
@@ -73,6 +74,7 @@
 		53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		5754209F169920B900A6A87D /* ofkXMLProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofkXMLProperties.h; path = ../../../../../ofkTools/ofkXMLProperties.h; sourceTree = "<group>"; };
 		575420A0169920B900A6A87D /* ofkXMLProperties.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ofkXMLProperties.mm; path = ../../../../../ofkTools/ofkXMLProperties.mm; sourceTree = "<group>"; };
+		575420A216995F2700A6A87D /* mySettings.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = mySettings.xml; sourceTree = "<group>"; };
 		57AB6CAD167FE07E000C1B18 /* changelog.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = changelog.txt; sourceTree = "<group>"; };
 		57AB6CAE167FE07E000C1B18 /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
 		57AB6CAF167FE07E000C1B18 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
@@ -387,6 +389,7 @@
 		BB24DD8B10DA77E000E9C588 /* data */ = {
 			isa = PBXGroup;
 			children = (
+				575420A216995F2700A6A87D /* mySettings.xml */,
 				BB24DD8C10DA77E000E9C588 /* Default.png */,
 				BB24DD8D10DA77E000E9C588 /* Icon.png */,
 			);
@@ -510,6 +513,7 @@
 				57AB6CF0167FE07E000C1B18 /* LICENSE.txt in Resources */,
 				57AB6CF2167FE07E000C1B18 /* README in Resources */,
 				57AB6CF5167FE07E000C1B18 /* README in Resources */,
+				575420A316995F2700A6A87D /* mySettings.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

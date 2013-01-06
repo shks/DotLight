@@ -119,7 +119,7 @@ void testApp::setup(){
         
     }else if( abs(ofGetDay() - lastOpenedDay) > 6 )
     {
-        //cout << "=--------- Open in different Week " << lastOpenedDay << endl;
+        cout << "=--------- Open in different Week " << lastOpenedDay << endl;
         isShowHint = true;
     }
     
@@ -190,9 +190,9 @@ void testApp::update(){
                                            +
                                 (myVerts[index].y - mTouchPos.y) * (myVerts[index].y - mTouchPos.y));
                 
-                targetZ = 1500*exp(-0.00005 * targetZ);
+                targetZ = 500*exp(-0.00003 * targetZ);
                 
-                myVerts[index].z += ( targetZ - myVerts[index].z) * 0.2;
+                myVerts[index].z += ( targetZ - myVerts[index].z) * 0.8;
             }
         }
     }
