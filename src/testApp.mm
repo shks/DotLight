@@ -121,9 +121,7 @@ void testApp::setup(){
         isShowHint = true;
     }
     
-    
     //debug
-    isShowHint = true;
     if(isShowHint)
     {
         Tweener.addTween(mHelpImage.a, 1.0, 1.0, &ofxTransitions::easeOutQuint, Delaytime + 0.2);
