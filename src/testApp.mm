@@ -1,7 +1,7 @@
 #include "testApp.h"
 
 #define BUFSIZE (9216 * 4)
-#define DISP_RATIO ((ofGetWidth() / 768.0))
+#define DISP_RATIO ((ofGetWidth() / 640.0))         //Compare with retina Screen Width
 
 #define WIDGET_OPENED_POSX (0)
 #define WIDGET_CLOSED_POSX ( - ofGetWidth() * 0.7)
@@ -12,16 +12,18 @@ void testApp::setup(){
 	ofxAccelerometer.setup();
 	//iPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT);
 	
+    ofSetFrameRate(30);
+    
 	ofBackground(0,0,0);
     ofBackgroundHex(0x000000);
     
     initGUILayout();
 
-    int WIDTH = DOT_HORIZONAL_NUM;
-    int HEIGHT = DOT_VERTICAL_NUM;
+    int WIDTH = DOT_HORIZONAL_NUM * DISP_RATIO ;
+    int HEIGHT = DOT_VERTICAL_NUM * DISP_RATIO;
     for (int i = 0; i < WIDTH; i++) {
         for (int j = 0; j < HEIGHT; j++) {
-            myVerts[j * WIDTH + i].set(i * SANDRES, (j - HEIGHT/2) * SANDRES, 0);
+            myVerts[j * WIDTH + i].set(i * SANDRES * DISP_RATIO, (j - HEIGHT/2) * SANDRES * DISP_RATIO, 0);
             
             myVectors[j * WIDTH + i] = 0.0;
             myForces[j * WIDTH + i] = 0.0f;
@@ -39,7 +41,7 @@ void testApp::setup(){
     myVbo.setColorData(myColor, NUM_PARTICLES, GL_DYNAMIC_DRAW);
     
     mPointIntervalRate = 1.0;
-    mPointSize = 2.0;
+    mPointSize = 2.0 ;
     mIsSmoothPoint = true;
     mHuePos = 0.0;
     mHueScale = 6.0;
@@ -147,15 +149,15 @@ void testApp::update(){
             if(j % 2 == 0)
             {
                 //even
-                myVerts[index].x = 2 * (i - 5) * SANDRES * mPointIntervalRate;
-                myVerts[index].y = (1 * (j - 5)) * SANDRES * mPointIntervalRate;
+                myVerts[index].x = 2 * (i - 5) * SANDRES * mPointIntervalRate * DISP_RATIO;
+                myVerts[index].y = (1 * (j - 5)) * SANDRES * mPointIntervalRate * DISP_RATIO;
                 myVerts[index].z += 0.1* myVectors[index];
 
             }else
             {
                 //odd
-                myVerts[index].x = (2 * (i - 5) + 1) * SANDRES * mPointIntervalRate;
-                myVerts[index].y = (1 * (j - 5)) * SANDRES * mPointIntervalRate;
+                myVerts[index].x = (2 * (i - 5) + 1) * SANDRES * mPointIntervalRate * DISP_RATIO;
+                myVerts[index].y = (1 * (j - 5)) * SANDRES * mPointIntervalRate * DISP_RATIO;
                 myVerts[index].z += 0.1 * myVectors[index];
             }
             
@@ -183,13 +185,14 @@ void testApp::update(){
             myColor[j * WIDTH + i].set(col.r / 255.5, col.g / 255.5, col.b / 255.5, a);
             
             // touch なにかする？
+            float DR = DISP_RATIO;
             if(isTouched && !isGUIWidgetActive())
             {
                  float targetZ = ((myVerts[index].x - mTouchPos.x) * (myVerts[index].x - mTouchPos.x)
                                            +
                                 (myVerts[index].y - mTouchPos.y) * (myVerts[index].y - mTouchPos.y));
                 
-                targetZ = 500*exp(-0.00003 * targetZ);
+                targetZ = 500*exp(-0.00003 * targetZ / DR / DR) * DR;
                 
                 myVerts[index].z += ( targetZ - myVerts[index].z) * 0.8;
             }
@@ -217,7 +220,7 @@ void testApp::draw(){
     ofEnableBlendMode(OF_BLENDMODE_ADD);
     static GLfloat distance[] = { 0.0, 0.0, 0.0001 };
     glPointParameterfv(GL_POINT_DISTANCE_ATTENUATION, distance);
-    glPointSize(20 * mPointSize * mPointIntervalRate);
+    glPointSize(20 * mPointSize * mPointIntervalRate * DISP_RATIO * DISP_RATIO);
     myVbo.draw(GL_POINTS, 0, DOT_HORIZONAL_NUM * DOT_VERTICAL_NUM);
     ofPopMatrix();
     
@@ -340,6 +343,7 @@ void testApp::touchUp(ofTouchEventArgs & touch){
         }
     }
     
+    float DR = DISP_RATIO;
     int WIDTH = DOT_HORIZONAL_NUM;
     int HEIGHT = DOT_VERTICAL_NUM;
     //TAP DETECTION
@@ -356,7 +360,7 @@ void testApp::touchUp(ofTouchEventArgs & touch){
                                          +
                                          (myVerts[index].y - mTouchPos.y) * (myVerts[index].y - mTouchPos.y));
                         
-                        targetZ = 100*exp(-0.00002 * targetZ);
+                        targetZ = 100*exp(-0.00002 * targetZ / DR / DR) * DR;
                         myVerts[index].z += ( targetZ );//- myVerts[index].z);
                     }
                 }
@@ -389,14 +393,14 @@ void testApp :: touchTwoFinger ( ofkMultiTouchEventArgs &multiTouch )
         //cout << "multiTouch.angleDif" << multiTouch.angleDif << endl;
         mPointSize += multiTouch.angleDif * -0.05;
         
-        if(mPointSize < 0.5)
+        if(mPointSize < 0.5 )
         {
             mPointSize = 0.5;
         }
         
-        if(mPointSize > 3.3)
+        if(mPointSize > 3.3 )
         {
-            mPointSize = 3.3;
+            mPointSize = 3.3 ;
         }
         
     }else{
@@ -405,9 +409,9 @@ void testApp :: touchTwoFinger ( ofkMultiTouchEventArgs &multiTouch )
     
         mPointIntervalRate += multiTouch.pinchLengthDif * 0.01;
         
-        if(mPointIntervalRate <1.0)
+        if(mPointIntervalRate < 1.0 )
         {
-            mPointIntervalRate = 1.0;
+            mPointIntervalRate = 1.0 ;
         }
     }
 
@@ -438,14 +442,14 @@ void testApp::initGUILayout()
 {
     float WidgetWidth = ofGetWidth() * 0.7;
     int xInit = OFX_UI_GLOBAL_WIDGET_SPACING;
-    int FONT_LARGE = (int) 30 * DISP_RATIO;
-    int FONT_MID= (int) 25 * DISP_RATIO;
-    int FONT_SMALL= (int) 20 * DISP_RATIO;
+    int FONT_LARGE = (int) 30 / 1.2 * DISP_RATIO;
+    int FONT_MID= (int) 25  /1.2 * DISP_RATIO;
+    int FONT_SMALL= (int) 20 / 1.2 * DISP_RATIO;
     float length = WidgetWidth - xInit;
     
     //-guiHeader-----------------------------------------------------------//
     
-    float guiHeaderHEIGHT = 2.0;
+    float guiHeaderHEIGHT = 2.0 * DISP_RATIO;
     
     guiCanvas = new ofxUICanvas(0,0 ,WidgetWidth,ofGetHeight() * guiHeaderHEIGHT);
     
@@ -466,24 +470,27 @@ void testApp::initGUILayout()
     guiCanvas->setFontSize(OFX_UI_FONT_SMALL , FONT_SMALL);
     
     {
+        
+        float SliderHeight = 60 * DISP_RATIO;
+        float SpaceOffset = 100 * DISP_RATIO;
 
         guiCanvas->addWidgetDown(new ofxUILabel("DotLight Settings", OFX_UI_FONT_LARGE));
 
-        guiCanvas->addSpacer(length-xInit, 100)->setVisible(false);
+        guiCanvas->addSpacer(length-xInit, SpaceOffset)->setVisible(false);
         guiCanvas->addSpacer(length-xInit, 1)->setVisible(true);
         
         guiCanvas->addWidgetDown(new ofxUILabel("Dot Size", OFX_UI_FONT_MEDIUM));
-        ofxUISlider *pSlider = new ofxUISlider(length-xInit, 60, 0.5, 3.3, &mPointSize, "");
+        ofxUISlider *pSlider = new ofxUISlider(length-xInit,SliderHeight, 0.5, 3.3, &mPointSize, "");
         pSlider->getLabel()->setVisible(false);
         guiCanvas->addWidgetDown(pSlider);
         
         guiCanvas->addWidgetDown(new ofxUILabel("Dot Interval", OFX_UI_FONT_MEDIUM));
-        pSlider = new ofxUISlider(length-xInit, 60, 1.0, 10.0, &mPointIntervalRate, "");
+        pSlider = new ofxUISlider(length-xInit, SliderHeight, 1.0, 10.0, &mPointIntervalRate, "");
         pSlider->getLabel()->setVisible(false);
         guiCanvas->addWidgetDown(pSlider);
 
         guiCanvas->addWidgetDown(new ofxUILabel("Brightness", OFX_UI_FONT_MEDIUM));
-        pSlider = new ofxUISlider(length-xInit, 60, 0.1, 1.0, &mPointBrightNess, "");
+        pSlider = new ofxUISlider(length-xInit, SliderHeight, 0.1, 1.0, &mPointBrightNess, "");
         pSlider->getLabel()->setVisible(false);
         guiCanvas->addWidgetDown(pSlider);
         
