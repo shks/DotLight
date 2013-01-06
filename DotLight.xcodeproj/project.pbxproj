@@ -14,6 +14,8 @@
 		53F323EB10A20EDB00E0DAE4 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */; };
 		575420A1169920B900A6A87D /* ofkXMLProperties.mm in Sources */ = {isa = PBXBuildFile; fileRef = 575420A0169920B900A6A87D /* ofkXMLProperties.mm */; };
 		575420A316995F2700A6A87D /* mySettings.xml in Resources */ = {isa = PBXBuildFile; fileRef = 575420A216995F2700A6A87D /* mySettings.xml */; };
+		57818D221699782D00D203E2 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 57818D211699782D00D203E2 /* Default-568h@2x.png */; };
+		57818D241699783100D203E2 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 57818D231699783100D203E2 /* Default@2x.png */; };
 		57AB6CEE167FE07E000C1B18 /* changelog.txt in Resources */ = {isa = PBXBuildFile; fileRef = 57AB6CAD167FE07E000C1B18 /* changelog.txt */; };
 		57AB6CEF167FE07E000C1B18 /* install.xml in Resources */ = {isa = PBXBuildFile; fileRef = 57AB6CAE167FE07E000C1B18 /* install.xml */; };
 		57AB6CF0167FE07E000C1B18 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 57AB6CAF167FE07E000C1B18 /* LICENSE.txt */; };
@@ -75,6 +77,8 @@
 		5754209F169920B900A6A87D /* ofkXMLProperties.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofkXMLProperties.h; path = ../../../../../ofkTools/ofkXMLProperties.h; sourceTree = "<group>"; };
 		575420A0169920B900A6A87D /* ofkXMLProperties.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ofkXMLProperties.mm; path = ../../../../../ofkTools/ofkXMLProperties.mm; sourceTree = "<group>"; };
 		575420A216995F2700A6A87D /* mySettings.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = mySettings.xml; sourceTree = "<group>"; };
+		57818D211699782D00D203E2 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		57818D231699783100D203E2 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		57AB6CAD167FE07E000C1B18 /* changelog.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = changelog.txt; sourceTree = "<group>"; };
 		57AB6CAE167FE07E000C1B18 /* install.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = install.xml; sourceTree = "<group>"; };
 		57AB6CAF167FE07E000C1B18 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
@@ -140,7 +144,7 @@
 		57D3DF801695D31400F22E7E /* ofkglImageRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofkglImageRenderer.h; path = ../../../../../ofkTools/ofkglImageRenderer.h; sourceTree = "<group>"; };
 		BB16EBD10F2B2A9500518274 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		BB16EBD80F2B2AB500518274 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		BB24DD8C10DA77E000E9C588 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
+		BB24DD8C10DA77E000E9C588 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = bin/data/Default.png; sourceTree = "<group>"; };
 		BB24DD8D10DA77E000E9C588 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
 		BB24DDC910DA781C00E9C588 /* ofxiphone-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "ofxiphone-Info.plist"; sourceTree = "<group>"; };
 		BBE5EAB70F49AD8400F28951 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -193,6 +197,9 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				57818D231699783100D203E2 /* Default@2x.png */,
+				57818D211699782D00D203E2 /* Default-568h@2x.png */,
+				BB24DD8C10DA77E000E9C588 /* Default.png */,
 				E4D8936A11527B74007E1F53 /* src */,
 				BB24DD8B10DA77E000E9C588 /* data */,
 				BB24E1F710DAA51900E9C588 /* openFrameworks */,
@@ -390,7 +397,6 @@
 			isa = PBXGroup;
 			children = (
 				575420A216995F2700A6A87D /* mySettings.xml */,
-				BB24DD8C10DA77E000E9C588 /* Default.png */,
 				BB24DD8D10DA77E000E9C588 /* Icon.png */,
 			);
 			name = data;
@@ -514,6 +520,8 @@
 				57AB6CF2167FE07E000C1B18 /* README in Resources */,
 				57AB6CF5167FE07E000C1B18 /* README in Resources */,
 				575420A316995F2700A6A87D /* mySettings.xml in Resources */,
+				57818D221699782D00D203E2 /* Default-568h@2x.png in Resources */,
+				57818D241699783100D203E2 /* Default@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
