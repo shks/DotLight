@@ -135,8 +135,8 @@ void testApp::setup(){
 //--------------------------------------------------------------
 void testApp::update(){
     
-    const static float springK = 1.4;
-    const static float DumperK = -0.1;
+    const static float springK = 1.7;
+    const static float DumperK = -0.05;
     
     int WIDTH = DOT_HORIZONAL_NUM;
     int HEIGHT = DOT_VERTICAL_NUM;
@@ -190,9 +190,9 @@ void testApp::update(){
                                            +
                                 (myVerts[index].y - mTouchPos.y) * (myVerts[index].y - mTouchPos.y));
                 
-                targetZ = 500*exp(-0.00005 * targetZ);
+                targetZ = 1500*exp(-0.00005 * targetZ);
                 
-                myVerts[index].z += ( targetZ - myVerts[index].z) * 0.5;
+                myVerts[index].z += ( targetZ - myVerts[index].z) * 0.2;
             }
         }
     }
@@ -251,6 +251,9 @@ void testApp::touchDown(ofTouchEventArgs & touch){
 
     mTouchPosEx = mTouchDownPos = mTouchPos;
     isRitghDragOneDirection = true;
+    
+    mTouchOnTime = ofGetElapsedTimeMillis();
+    
 }
 
 //--------------------------------------------------------------
@@ -296,11 +299,10 @@ void testApp::touchMoved(ofTouchEventArgs & touch){
         }else
         {
             //左方向へのDrag // OPEN to CLOSE
-            
             isRitghDragOneDirection = false;
             
-            
-            if( guiCanvas->getWidgetHit(mTouchPos.x, mTouchPos.y) == NULL)
+            //Touch Onの座標で棄却する。
+            if( guiCanvas->getWidgetHit(mTouchDownPos.x, mTouchDownPos.y) == NULL)
             {
                 
                 if(mTouchPos.x - mTouchDownPos.x < - ofGetWidth() * 0.25)
@@ -335,6 +337,32 @@ void testApp::touchUp(ofTouchEventArgs & touch){
     {
         Tweener.addTween(mHelpImage.a, 0.0, 1.0, &ofxTransitions::easeOutQuint);
     }
+    
+    int WIDTH = DOT_HORIZONAL_NUM;
+    int HEIGHT = DOT_VERTICAL_NUM;
+    //TAP DETECTION
+    if( abs((int)ofGetElapsedTimeMillis() - (int)mTouchOnTime) < TAP_THRESH )
+    {
+        if(  (mTouchPos - mTouchDownPos).length() < ofGetWidth() / 10.0)
+        {
+            if(!isGUIWidgetActive())
+            {
+                for (int i = 0; i < WIDTH; i++) {
+                    for (int j = 0; j < HEIGHT; j++) {
+                        int index = j * WIDTH + i;
+                        float targetZ = ((myVerts[index].x - mTouchPos.x) * (myVerts[index].x - mTouchPos.x)
+                                         +
+                                         (myVerts[index].y - mTouchPos.y) * (myVerts[index].y - mTouchPos.y));
+                        
+                        targetZ = 100*exp(-0.00002 * targetZ);
+                        myVerts[index].z += ( targetZ );//- myVerts[index].z);
+                    }
+                }
+            }
+            
+        }
+        
+    }
 }
 
 //--------------------------------------------------------------
@@ -353,11 +381,11 @@ void testApp :: touchTwoFinger ( ofkMultiTouchEventArgs &multiTouch )
     if(isGUIWidgetActive())
         return;
     
-    if(abs(multiTouch.angleDif) > 2.0)
+    if(abs(multiTouch.angleDif) * 5  > abs(multiTouch.pinchLengthDif))
     {
         //ROTATE
-        
-        mPointSize += multiTouch.angleDif * -0.1;
+        cout << "multiTouch.angleDif" << multiTouch.angleDif << endl;
+        mPointSize += multiTouch.angleDif * -0.05;
         
         if(mPointSize < 0.5)
         {
@@ -371,6 +399,9 @@ void testApp :: touchTwoFinger ( ofkMultiTouchEventArgs &multiTouch )
         
     }else{
         //PINCH
+        cout << "multiTouch.pinchLengthDif" << multiTouch.pinchLengthDif << endl;
+    
+        
         mPointIntervalRate += multiTouch.pinchLengthDif * 0.01;
         
         if(mPointIntervalRate <1.0)
@@ -509,7 +540,6 @@ void testApp::changeWidgetState( WidgetState nextState)
             guiCanvas->setVisible(false);
 
             printf("WidgetClosed /n");
-            
         }
         mWidgetState = nextState;
     }

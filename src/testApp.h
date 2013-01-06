@@ -49,21 +49,27 @@ class testApp : public ofxiPhoneApp{
     float myVectors[DOT_HORIZONAL_NUM * DOT_VERTICAL_NUM];
     float myForces[DOT_HORIZONAL_NUM * DOT_VERTICAL_NUM];
     
+    /// ----------- Touch interactions ------------//
     bool isTouched;
     ofPoint mTouchPos;
     ofPoint mTouchPosEx;
     ofPoint mTouchDownPos;
     bool isRitghDragOneDirection;
+    unsigned int mTouchOnTime;
+    static const int TAP_THRESH = 800;
 
+    // ------------ Color control -----------------//
     float mHuePos;
     float mHueScale;
     
+    // ------------ Dot Rendering Control----------//
     float mPointSize;
     float mPointIntervalRate;
     float mPointBrightNess;
     bool mIsSmoothPoint;
     bool mIsSpace;
     
+    // ------------ GUI event (Not Used) ----------//
     void guiEvent(ofxUIEventArgs &e);
     
     
@@ -85,13 +91,10 @@ private:
     bool isGUIWidgetActive();
     void changeWidgetState( WidgetState nextState );
   
-    ///
+    
     ofkglImageRenderer mSplashImage;
     ofkglImageRenderer mHelpImage;
     
-    
-    //debug
-    int debugInt;
     
 };
 
